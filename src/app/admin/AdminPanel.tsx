@@ -2,7 +2,7 @@
 import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Trash2, Check, LogOut } from "lucide-react";
-import { uploadTemplate, toggleTemplate, deleteTemplate, signOut } from "./actions";
+import { uploadTemplate, toggleTemplate, deleteTemplate, setPhotobookFlag, signOut } from "./actions";
 import { SparkleIcon, MiniEiffelSVG } from "@/components/illustrations";
 
 const brand = {
@@ -20,8 +20,9 @@ const font = {
 };
 
 type T = { id: string; name: string; storage_path: string; active: boolean; created_at: string; previewUrl?: string };
+type PhotobookStrip = { id: string; storage_path: string; created_at: string; url: string };
 
-export default function AdminPanel({ email, templates }: { email: string; templates: T[] }) {
+export default function AdminPanel({ email, templates, photobookStrips }: { email: string; templates: T[]; photobookStrips: PhotobookStrip[] }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -83,6 +84,14 @@ export default function AdminPanel({ email, templates }: { email: string; templa
     if (!confirm(`Delete "${displayName}"?`)) return;
     start(async () => {
       await deleteTemplate(id);
+      router.refresh();
+    });
+  };
+
+  const removeFromPhotobook = (id: string) => {
+    if (!confirm("Remove this strip from the photobook?")) return;
+    start(async () => {
+      await setPhotobookFlag(id, false);
       router.refresh();
     });
   };
@@ -487,6 +496,123 @@ export default function AdminPanel({ email, templates }: { email: string; templa
                       <Trash2 size={11} strokeWidth={1.5} /> Delete
                     </button>
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Photobook strips section */}
+        <h2
+          style={{
+            fontFamily: font.display,
+            fontWeight: 700,
+            fontSize: "11px",
+            letterSpacing: "0.32em",
+            textTransform: "uppercase" as const,
+            color: brand.ink,
+            marginTop: "64px",
+            marginBottom: "24px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <SparkleIcon size={10} color={brand.gold} /> Photobook Strips
+          <span
+            style={{
+              fontFamily: font.body,
+              fontWeight: 300,
+              color: "rgba(10,10,10,0.35)",
+              fontSize: "10px",
+              letterSpacing: "0.1em",
+            }}
+          >
+            ({photobookStrips.length})
+          </span>
+        </h2>
+
+        {photobookStrips.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px",
+              border: "2px dashed rgba(10,10,10,0.1)",
+              borderRadius: "2px",
+            }}
+          >
+            <div style={{ fontFamily: font.script, fontSize: "24px", color: brand.pinkBaby, marginBottom: "8px" }}>
+              no strips saved yet
+            </div>
+            <p
+              style={{
+                fontFamily: font.body,
+                fontWeight: 300,
+                fontSize: "12px",
+                letterSpacing: "0.1em",
+                color: "rgba(10,10,10,0.4)",
+              }}
+            >
+              Guests will be prompted to add their strip after the booth
+            </p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "20px" }}>
+            {photobookStrips.map((s) => (
+              <div
+                key={s.id}
+                style={{
+                  background: brand.white,
+                  border: "1px solid rgba(10,10,10,0.08)",
+                  borderRadius: "2px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 20px rgba(10,10,10,0.04)",
+                  transition: "all 0.25s",
+                  position: "relative",
+                }}
+              >
+                <div style={{ width: "100%", aspectRatio: "1/3", position: "relative", background: brand.pinkSoft }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={s.url}
+                    alt={`Strip ${s.id}`}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: brand.white }}
+                  />
+                </div>
+                <div style={{ padding: "12px 14px 14px" }}>
+                  <div
+                    style={{
+                      fontFamily: font.body,
+                      fontWeight: 300,
+                      fontSize: "10px",
+                      color: "rgba(10,10,10,0.35)",
+                      letterSpacing: "0.08em",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {s.created_at?.slice(0, 10) ?? "—"} · #{s.id}
+                  </div>
+                  <button
+                    onClick={() => removeFromPhotobook(s.id)}
+                    disabled={pending}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      background: "none",
+                      border: "none",
+                      cursor: pending ? "not-allowed" : "pointer",
+                      fontFamily: font.body,
+                      fontWeight: 300,
+                      fontSize: "10px",
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase" as const,
+                      color: "rgba(10,10,10,0.45)",
+                      padding: 0,
+                    }}
+                  >
+                    <Trash2 size={11} strokeWidth={1.5} /> Remove
+                  </button>
                 </div>
               </div>
             ))}

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Camera, Printer } from "lucide-react";
 import { SparkleIcon, BalloonBouquet, ScatteredSparkles } from "@/components/illustrations";
+import PhotobookViewer from "@/components/PhotobookViewer";
 
 const brand = {
   cream: "#fdfaf3",
@@ -21,6 +22,7 @@ const font = {
 export default function LandingPage() {
   return (
     <div style={{ fontFamily: font.body, backgroundColor: brand.cream, minHeight: "100vh", color: brand.ink }}>
+      <PhotobookViewer />
       {/* ─── Header ─── */}
       <header
         style={{

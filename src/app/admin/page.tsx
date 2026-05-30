@@ -12,8 +12,14 @@ type Template = {
   created_at: string;
 };
 
+type PhotobookStrip = {
+  id: string;
+  storage_path: string;
+  created_at: string;
+  url: string;
+};
+
 export default async function AdminPage() {
-  // If Supabase isn't configured yet, show a setup banner so local dev still works.
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return <SetupBanner />;
   }
@@ -38,21 +44,32 @@ export default async function AdminPage() {
   }
 
   const service = getServiceSupabase();
-  const { data } = await service
+
+  const { data: tplData } = await service
     .from("templates")
     .select("id,name,storage_path,active,created_at")
     .order("created_at", { ascending: false });
 
-  // Sign URLs for previews (10 min)
   const templates: (Template & { previewUrl?: string })[] = [];
-  for (const t of (data ?? [])) {
+  for (const t of (tplData ?? [])) {
     const { data: signed } = await service.storage
       .from("templates")
       .createSignedUrl(t.storage_path, 600);
     templates.push({ ...t, previewUrl: signed?.signedUrl });
   }
 
-  return <AdminPanel email={user.email!} templates={templates} />;
+  const { data: stripData } = await service
+    .from("strips")
+    .select("id,storage_path,created_at")
+    .eq("photobook", true)
+    .order("created_at", { ascending: false });
+
+  const photobookStrips: PhotobookStrip[] = (stripData ?? []).map((s) => {
+    const { data: pub } = service.storage.from("strips").getPublicUrl(s.storage_path);
+    return { ...s, url: pub.publicUrl };
+  });
+
+  return <AdminPanel email={user.email!} templates={templates} photobookStrips={photobookStrips} />;
 }
 
 function SetupBanner() {

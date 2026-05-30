@@ -23,7 +23,6 @@ export async function uploadTemplate(formData: FormData) {
     .upload(path, ab, { contentType: "image/png", upsert: false });
   if (upErr) return { error: upErr.message };
 
-  // Default to AVAILABLE on guest picker
   const { error: dbErr } = await service.from("templates").insert({
     name,
     storage_path: path,
@@ -50,6 +49,13 @@ export async function deleteTemplate(id: string) {
   const { data } = await service.from("templates").select("storage_path").eq("id", id).maybeSingle();
   if (data?.storage_path) await service.storage.from("templates").remove([data.storage_path]);
   await service.from("templates").delete().eq("id", id);
+}
+
+// Toggle a strip'"'"'s photobook flag. Used by admin "remove from photobook" button.
+export async function setPhotobookFlag(id: string, save: boolean) {
+  await requireAdmin();
+  const service = getServiceSupabase();
+  await service.from("strips").update({ photobook: save }).eq("id", id);
 }
 
 export async function signOut() {
