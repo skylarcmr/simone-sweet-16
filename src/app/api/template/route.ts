@@ -3,7 +3,7 @@ import { getServiceSupabase } from "@/lib/supabase-server";
 
 // Returns { url } for a template by id (preferred), or first active template fallback.
 export async function GET(req: NextRequest) {
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
     return NextResponse.json({}, { status: 200 });
   }
   const id = req.nextUrl.searchParams.get("id");

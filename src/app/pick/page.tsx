@@ -4,6 +4,11 @@ import PickClient from "./PickClient";
 export const dynamic = "force-dynamic";
 
 export default async function PickPage() {
+  // Graceful fallback if Supabase isn't configured yet
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return <PickClient templates={[]} />;
+  }
+
   const sb = getServiceSupabase();
 
   const { data: rows } = await sb
