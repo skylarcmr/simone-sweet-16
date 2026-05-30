@@ -46,6 +46,17 @@ async function renderStrip(canvas: HTMLCanvasElement, photos: string[], template
   ctx.fillStyle = brand.white;
   ctx.fillRect(0, 0, STRIP_W, STRIP_H);
 
+  // 1. Template drawn FIRST as background (its own banner/borders/scenery)
+  let hasTemplate = false;
+  if (template) {
+    try {
+      const tpl = await loadImage(template);
+      ctx.drawImage(tpl, 0, 0, STRIP_W, STRIP_H);
+      hasTemplate = true;
+    } catch {}
+  }
+
+  // 2. Photos drawn ON TOP into their 4 panel slots
   await Promise.all(
     photos.map(async (src, i) => {
       try {
@@ -59,39 +70,35 @@ async function renderStrip(canvas: HTMLCanvasElement, photos: string[], template
     })
   );
 
-  const bannerH = STRIP_H - BANNER_Y;
-  ctx.fillStyle = brand.pinkSoft;
-  ctx.fillRect(0, BANNER_Y, STRIP_W, bannerH);
+  // 3. Default pink banner + border ONLY when no template chosen
+  if (!hasTemplate) {
+    const bannerH = STRIP_H - BANNER_Y;
+    ctx.fillStyle = brand.pinkSoft;
+    ctx.fillRect(0, BANNER_Y, STRIP_W, bannerH);
 
-  ctx.strokeStyle = brand.gold;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(20, BANNER_Y);
-  ctx.lineTo(STRIP_W - 20, BANNER_Y);
-  ctx.stroke();
+    ctx.strokeStyle = brand.gold;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(20, BANNER_Y);
+    ctx.lineTo(STRIP_W - 20, BANNER_Y);
+    ctx.stroke();
 
-  ctx.font = `italic 700 52px 'Playfair Display', serif`;
-  ctx.fillStyle = brand.gold;
-  ctx.textAlign = "center";
-  ctx.fillText("Simone", STRIP_W / 2, BANNER_Y + 70);
+    ctx.font = `italic 700 52px 'Playfair Display', serif`;
+    ctx.fillStyle = brand.gold;
+    ctx.textAlign = "center";
+    ctx.fillText("Simone", STRIP_W / 2, BANNER_Y + 70);
 
-  ctx.font = `300 18px 'Montserrat', sans-serif`;
-  ctx.fillStyle = brand.ink;
-  ctx.fillText("SWEET 16 · AUGUST 8, 2026", STRIP_W / 2, BANNER_Y + 108);
+    ctx.font = `300 18px 'Montserrat', sans-serif`;
+    ctx.fillStyle = brand.ink;
+    ctx.fillText("SWEET 16 · AUGUST 8, 2026", STRIP_W / 2, BANNER_Y + 108);
 
-  ctx.font = `300 14px 'Montserrat', sans-serif`;
-  ctx.fillStyle = "rgba(10,10,10,0.4)";
-  ctx.fillText("A Night in Paris", STRIP_W / 2, BANNER_Y + 138);
+    ctx.font = `300 14px 'Montserrat', sans-serif`;
+    ctx.fillStyle = "rgba(10,10,10,0.4)";
+    ctx.fillText("A Night in Paris", STRIP_W / 2, BANNER_Y + 138);
 
-  ctx.strokeStyle = brand.pinkBaby;
-  ctx.lineWidth = 6;
-  ctx.strokeRect(3, 3, STRIP_W - 6, STRIP_H - 6);
-
-  if (template) {
-    try {
-      const tpl = await loadImage(template);
-      ctx.drawImage(tpl, 0, 0, STRIP_W, STRIP_H);
-    } catch {}
+    ctx.strokeStyle = brand.pinkBaby;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(3, 3, STRIP_W - 6, STRIP_H - 6);
   }
 }
 
