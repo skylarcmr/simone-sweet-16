@@ -16,8 +16,12 @@ drop index if exists public.templates_one_active;
 create table if not exists public.strips (
   id text primary key,                  -- 6–12 char URL slug
   storage_path text not null unique,
+  photobook boolean not null default false,  -- guest opt-in for printed photobook
   created_at timestamptz not null default now()
 );
+
+-- Migration: add photobook column to existing tables
+alter table public.strips add column if not exists photobook boolean not null default false;
 
 -- Storage buckets ----------------------------------------------------
 -- In Dashboard → Storage:

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Printer, Download, RotateCcw } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { SparkleIcon, FairyLightGarland, RibbonBannerSVG } from "@/components/illustrations";
+import { SparkleIcon, FairyLightGarland } from "@/components/illustrations";
 
 const brand = {
   cream: "#fdfaf3",
@@ -123,7 +123,10 @@ export default function StripPage() {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [photos, setPhotos] = useState<string[] | null>(null);
   const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const [stripId, setStripId] = useState<string | null>(null);
   const [uploadErr, setUploadErr] = useState<string | null>(null);
+  const [photobookVote, setPhotobookVote] = useState<"yes" | "no" | null>(null);
+  const [photobookBusy, setPhotobookBusy] = useState(false);
 
   // Read photos from sessionStorage on mount.
   useEffect(() => {
@@ -171,6 +174,7 @@ export default function StripPage() {
         if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
         const json = await res.json();
         if (json?.id) {
+          setStripId(json.id);
           setShortUrl(`${window.location.origin}/d/${json.id}`);
         }
       } catch (e: unknown) {
@@ -180,6 +184,25 @@ export default function StripPage() {
 
     return () => clearTimeout(timer);
   }, [photos]);
+
+  const votePhotobook = async (vote: "yes" | "no") => {
+    if (!stripId || photobookBusy) return;
+    setPhotobookBusy(true);
+    try {
+      const res = await fetch("/api/photobook-vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: stripId, save: vote === "yes" }),
+      });
+      if (!res.ok) throw new Error("vote failed");
+      setPhotobookVote(vote);
+    } catch {
+      // Soft-fail: still mark vote locally so guest gets feedback
+      setPhotobookVote(vote);
+    } finally {
+      setPhotobookBusy(false);
+    }
+  };
 
   const handlePrint = async () => {
     if (!canvasRef.current) return;
@@ -484,15 +507,97 @@ export default function StripPage() {
             </div>
           </div>
 
-          {/* Banner preview */}
-          <div style={{ textAlign: "center", paddingTop: "8px" }}>
-            <RibbonBannerSVG width={340} />
-            <div style={{ fontFamily: font.script, fontSize: "28px", color: brand.gold, marginTop: "-40px", lineHeight: 1, position: "relative" }}>
-              Simone
+          {/* Photobook prompt */}
+          <div
+            style={{
+              background: brand.white,
+              border: `1px solid rgba(212,175,107,0.35)`,
+              borderRadius: "2px",
+              padding: "28px 32px",
+              textAlign: "center",
+              boxShadow: "0 4px 20px rgba(10,10,10,0.04)",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: font.display,
+                fontWeight: 700,
+                fontSize: "11px",
+                letterSpacing: "0.32em",
+                textTransform: "uppercase" as const,
+                color: brand.ink,
+                marginBottom: "6px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <SparkleIcon size={10} /> Save This Memory? <SparkleIcon size={10} />
             </div>
-            <div style={{ fontFamily: font.body, fontWeight: 300, fontSize: "10px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(10,10,10,0.4)", marginTop: "10px" }}>
-              Sweet 16 · August 8, 2026
-            </div>
+            <p
+              style={{
+                fontFamily: font.body,
+                fontWeight: 300,
+                fontSize: "11px",
+                letterSpacing: "0.05em",
+                color: "rgba(10,10,10,0.55)",
+                margin: "0 0 22px",
+                lineHeight: 1.5,
+              }}
+            >
+              {photobookVote === null
+                ? "Want this strip in Simone's printed photobook? She'll cherish every page."
+                : photobookVote === "yes"
+                ? "Merci! It's in the book. xo"
+                : "No worries — it's still yours to keep."}
+            </p>
+            {photobookVote === null && (
+              <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
+                <button
+                  onClick={() => votePhotobook("yes")}
+                  disabled={photobookBusy || !stripId}
+                  style={{
+                    flex: "0 0 auto",
+                    padding: "12px 32px",
+                    background: brand.ink,
+                    color: brand.white,
+                    border: "none",
+                    borderRadius: "1px",
+                    fontFamily: font.body,
+                    fontWeight: 400,
+                    fontSize: "11px",
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase" as const,
+                    cursor: photobookBusy || !stripId ? "not-allowed" : "pointer",
+                    opacity: photobookBusy || !stripId ? 0.4 : 1,
+                  }}
+                >
+                  Yes, Please
+                </button>
+                <button
+                  onClick={() => votePhotobook("no")}
+                  disabled={photobookBusy || !stripId}
+                  style={{
+                    flex: "0 0 auto",
+                    padding: "12px 32px",
+                    background: brand.white,
+                    color: brand.ink,
+                    border: `1.5px solid ${brand.ink}`,
+                    borderRadius: "1px",
+                    fontFamily: font.body,
+                    fontWeight: 400,
+                    fontSize: "11px",
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase" as const,
+                    cursor: photobookBusy || !stripId ? "not-allowed" : "pointer",
+                    opacity: photobookBusy || !stripId ? 0.4 : 1,
+                  }}
+                >
+                  No Thanks
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
