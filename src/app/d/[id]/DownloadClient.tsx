@@ -1,4 +1,20 @@
 "use client";
+import { Download } from "lucide-react";
+import { SparkleIcon } from "@/components/illustrations";
+
+const brand = {
+  cream: "#fdfaf3",
+  pinkBaby: "#f8c8d6",
+  pinkSoft: "#fce4ec",
+  ink: "#0a0a0a",
+  gold: "#d4af6b",
+  white: "#ffffff",
+};
+const font = {
+  display: "'Playfair Display', Georgia, serif",
+  script: "'Allura', cursive",
+  body: "'Montserrat', system-ui, sans-serif",
+};
 
 export default function DownloadClient({ imageUrl, stripId }: { imageUrl: string; stripId: string }) {
   async function download() {
@@ -12,45 +28,151 @@ export default function DownloadClient({ imageUrl, stripId }: { imageUrl: string
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch {
-      // Fallback: open in new tab so iOS Safari can long-press to save.
       window.open(imageUrl, "_blank");
     }
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-6 py-8 max-w-md mx-auto w-full">
-      <p className="font-script text-4xl text-[var(--color-pink-deep)] rotate-[-2deg] mb-1" style={{ fontFamily: "Allura, cursive" }}>
-        voilà!
-      </p>
-      <h1 className="font-display text-2xl tracking-[0.25em] uppercase font-bold mb-1 text-center">
-        Your strip
-      </h1>
-      <p className="text-sm text-[var(--color-ink-soft)] mb-6 text-center">
-        from Simone&rsquo;s Sweet 16 · A Night in Paris
-      </p>
+    <div
+      style={{
+        fontFamily: font.body,
+        backgroundColor: brand.cream,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "48px 24px 40px",
+        color: brand.ink,
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+          <SparkleIcon size={11} color={brand.pinkBaby} />
+          <SparkleIcon size={14} color={brand.gold} />
+          <SparkleIcon size={11} color={brand.pinkBaby} />
+        </div>
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={imageUrl}
-        alt="Your photo strip"
-        className="develop max-h-[60vh] w-auto rounded-sm shadow-2xl mb-6"
-      />
+        <div
+          style={{
+            fontFamily: font.script,
+            fontSize: "52px",
+            color: brand.gold,
+            lineHeight: 1.1,
+            textAlign: "center",
+          }}
+        >
+          voilà!
+        </div>
 
-      <button
-        onClick={download}
-        className="w-full bg-[var(--color-ink)] text-white font-display font-semibold tracking-[0.3em] px-6 py-4 rounded-sm hover:bg-[var(--color-pink-deep)] transition uppercase shadow-lg"
-      >
-        Save to my phone
-      </button>
+        <h1
+          style={{
+            fontFamily: font.display,
+            fontWeight: 700,
+            fontSize: "22px",
+            color: brand.ink,
+            textAlign: "center",
+            margin: "4px 0 32px",
+          }}
+        >
+          Your Strip
+        </h1>
 
-      <p className="text-xs text-center text-[var(--color-ink-soft)] mt-4 leading-relaxed">
-        On iPhone, after tapping save you may need to confirm in your Files app.<br />
-        On Android, the strip lands in your Downloads folder.
-      </p>
+        <div
+          style={{
+            marginBottom: "36px",
+            background: brand.white,
+            border: `3px solid ${brand.pinkBaby}`,
+            borderRadius: "2px",
+            padding: "8px",
+            boxShadow: "0 8px 40px rgba(10,10,10,0.14)",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl}
+            alt="Your photo strip"
+            style={{ width: "100%", maxWidth: "200px", display: "block" }}
+          />
+        </div>
 
-      <p className="font-script text-2xl text-[var(--color-gold)] mt-8" style={{ fontFamily: "Allura, cursive" }}>
-        merci, ma chérie ✨
-      </p>
-    </main>
+        <button
+          onClick={download}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            padding: "20px",
+            background: brand.ink,
+            color: brand.white,
+            border: "none",
+            borderRadius: "1px",
+            fontFamily: font.body,
+            fontWeight: 400,
+            fontSize: "12px",
+            letterSpacing: "0.32em",
+            textTransform: "uppercase" as const,
+            cursor: "pointer",
+            marginBottom: "14px",
+          }}
+        >
+          <Download size={16} strokeWidth={1.5} />
+          Save to My Phone
+        </button>
+
+        <p
+          style={{
+            fontFamily: font.body,
+            fontWeight: 300,
+            fontSize: "11px",
+            letterSpacing: "0.05em",
+            color: "rgba(10,10,10,0.42)",
+            textAlign: "center",
+            lineHeight: 1.7,
+            margin: "0 0 40px",
+          }}
+        >
+          On iPhone, tap Save then check your Photos app.
+          <br />
+          On Android, check your Downloads folder.
+        </p>
+
+        <div style={{ width: "60px", height: "1px", background: brand.pinkBaby, marginBottom: "28px" }} />
+
+        <p
+          style={{
+            fontFamily: font.script,
+            fontSize: "24px",
+            color: brand.pinkBaby,
+            textAlign: "center",
+            margin: 0,
+          }}
+        >
+          merci, ma chérie ✨
+        </p>
+
+        <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
+          <SparkleIcon size={9} color={brand.gold} />
+          <SparkleIcon size={7} color={brand.pinkBaby} />
+          <SparkleIcon size={9} color={brand.gold} />
+        </div>
+
+        <p
+          style={{
+            fontFamily: font.body,
+            fontWeight: 300,
+            fontSize: "9px",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase" as const,
+            color: "rgba(10,10,10,0.3)",
+            textAlign: "center",
+            marginTop: "48px",
+          }}
+        >
+          Simone&rsquo;s Sweet 16 · A Night in Paris · August 8
+        </p>
+      </div>
+    </div>
   );
 }

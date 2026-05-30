@@ -1,85 +1,266 @@
 "use client";
 import Link from "next/link";
-import { EiffelScene } from "@/components/illustrations/EiffelScene";
+import { Camera, Printer } from "lucide-react";
+import { SparkleIcon, BalloonBouquet, ScatteredSparkles } from "@/components/illustrations";
 
-export default function Home() {
+const brand = {
+  cream: "#fdfaf3",
+  pinkBaby: "#f8c8d6",
+  pinkSoft: "#fce4ec",
+  ink: "#0a0a0a",
+  gold: "#d4af6b",
+  white: "#ffffff",
+};
+
+const font = {
+  display: "'Playfair Display', Georgia, serif",
+  script: "'Allura', cursive",
+  body: "'Montserrat', system-ui, sans-serif",
+};
+
+export default function LandingPage() {
   return (
-    <main className="min-h-screen flex flex-col">
-      <header className="px-6 py-5 flex items-center justify-between max-w-6xl mx-auto w-full">
-        <div className="font-display text-xl tracking-[0.3em]">
-          <span className="text-gold-foil font-bold">SIMONE</span>
-          <span className="opacity-50 mx-2">·</span>
-          <span className="font-light">SWEET 16</span>
+    <div style={{ fontFamily: font.body, backgroundColor: brand.cream, minHeight: "100vh", color: brand.ink }}>
+      {/* ─── Header ─── */}
+      <header
+        style={{
+          padding: "18px 48px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: "1px solid rgba(10,10,10,0.07)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/eiffel-mini.png" alt="mini Eiffel" style={{ height: "36px", width: "auto", objectFit: "contain" }} />
+          <span
+            style={{
+              fontFamily: font.display,
+              fontWeight: 700,
+              fontSize: "13px",
+              letterSpacing: "0.08em",
+              color: brand.ink,
+            }}
+          >
+            Simone <span style={{ color: brand.gold }}>·</span> Sweet 16
+          </span>
         </div>
-        <nav className="hidden sm:flex gap-6 font-sans text-xs uppercase tracking-[0.25em]">
-          <a href="#about" className="hover:text-[var(--color-pink-deep)]">About</a>
-          <a href="#how" className="hover:text-[var(--color-pink-deep)]">How</a>
-          <Link href="/admin" className="hover:text-[var(--color-pink-deep)] opacity-60">Admin</Link>
-        </nav>
+        <Link
+          href="/admin/login"
+          style={{
+            fontFamily: font.body,
+            fontWeight: 300,
+            fontSize: "10px",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase" as const,
+            color: brand.ink,
+            opacity: 0.45,
+            textDecoration: "none",
+          }}
+        >
+          Admin
+        </Link>
       </header>
 
-      <section className="flex-1 grid md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6 py-8 items-center w-full">
-        <div className="space-y-6">
-          <p className="font-script text-4xl text-[var(--color-pink-deep)] rotate-[-3deg]" style={{ fontFamily: "Allura, cursive" }}>
-            a night in Paris
-          </p>
-          <h1 className="font-display text-6xl md:text-7xl font-bold leading-[1.0]">
-            <span className="block">Simone is</span>
-            <span className="block ribbon">turning sweet</span>
-            <span className="block text-gold-foil text-8xl md:text-9xl font-black italic">16</span>
-          </h1>
-          <p className="text-lg text-[var(--color-ink-soft)] max-w-md leading-relaxed">
-            Step into the booth, strike four poses, and walk away with a
-            keepsake strip from the night. <span className="sparkle">printed or texted, the souvenir is yours</span>
-          </p>
-          <div className="flex flex-wrap gap-3 items-center">
-            <Link
-              href="/booth"
-              className="bg-[var(--color-ink)] text-[var(--color-paper)] font-display font-semibold tracking-[0.3em] px-9 py-4 rounded-sm hover:bg-[var(--color-pink-deep)] transition shadow-lg"
-            >
-              ENTER THE BOOTH
-            </Link>
-            <span className="font-script text-2xl text-[var(--color-gold)] rotate-[2deg]" style={{ fontFamily: "Allura, cursive" }}>
-              ← it's free, ma chérie
-            </span>
+      {/* ─── Hero ─── */}
+      <section
+        style={{
+          display: "flex",
+          alignItems: "center",
+          minHeight: "82vh",
+          padding: "60px 80px",
+          gap: "48px",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ flex: "1 1 480px", maxWidth: "480px" }}>
+          <div
+            style={{
+              fontFamily: font.script,
+              fontSize: "30px",
+              color: brand.pinkBaby,
+              marginBottom: "4px",
+              lineHeight: 1.2,
+            }}
+          >
+            she is turning
           </div>
-          <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-ink-soft)] opacity-60 pt-2">
-            august 8 · save the night
+
+          <h1
+            style={{
+              fontFamily: font.display,
+              fontWeight: 900,
+              fontSize: "clamp(64px, 8vw, 108px)",
+              lineHeight: 0.95,
+              margin: "0 0 4px",
+              color: brand.ink,
+            }}
+          >
+            Sweet
+          </h1>
+          <div
+            style={{
+              fontFamily: font.display,
+              fontWeight: 900,
+              fontStyle: "italic",
+              fontSize: "clamp(80px, 10vw, 136px)",
+              lineHeight: 0.9,
+              color: brand.gold,
+              marginBottom: "28px",
+            }}
+          >
+            16
+          </div>
+
+          <p
+            style={{
+              fontFamily: font.body,
+              fontWeight: 300,
+              fontSize: "11px",
+              letterSpacing: "0.28em",
+              textTransform: "uppercase" as const,
+              color: brand.ink,
+              opacity: 0.6,
+              margin: "0 0 42px",
+            }}
+          >
+            A Night in Paris · August 8
           </p>
+
+          <Link
+            href="/booth"
+            style={{
+              display: "inline-block",
+              padding: "18px 52px",
+              background: brand.ink,
+              color: brand.white,
+              fontFamily: font.body,
+              fontWeight: 400,
+              fontSize: "11px",
+              letterSpacing: "0.32em",
+              textTransform: "uppercase" as const,
+              textDecoration: "none",
+              borderRadius: "1px",
+              transition: "opacity 0.2s",
+            }}
+          >
+            Enter the Booth
+          </Link>
+
+          <div style={{ marginTop: "36px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <SparkleIcon size={13} />
+            <SparkleIcon size={9} color={brand.pinkBaby} />
+            <SparkleIcon size={13} />
+            <ScatteredSparkles />
+          </div>
         </div>
 
-        <div className="max-w-md mx-auto w-full">
-          <EiffelScene onEnter={() => (window.location.href = "/booth")} />
+        <div
+          style={{
+            flex: "1 1 360px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            paddingBottom: "20px",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/eiffel-hero.jpg"
+            alt="Eiffel Tower with pink bow"
+            style={{
+              maxWidth: "100%",
+              maxHeight: "560px",
+              objectFit: "contain",
+              filter: "drop-shadow(0 8px 32px rgba(10,10,10,0.06))",
+            }}
+          />
         </div>
       </section>
 
-      <section id="how" className="max-w-6xl mx-auto px-6 py-16 w-full">
-        <h2 className="font-display text-3xl tracking-[0.3em] text-center mb-12 uppercase">
-          <span className="sparkle">comment ça marche</span>
-        </h2>
-        <div className="grid sm:grid-cols-3 gap-6">
-          {[
-            { n: "01", t: "Pose", d: "Click in, allow camera access, press start." },
-            { n: "02", t: "Smile (×4)", d: "Three… two… one… and snap. Four shots, one strip." },
-            { n: "03", t: "Print or Text", d: "Walk away with your strip — printed in-booth or texted to your phone." },
-          ].map(s => (
-            <div key={s.n} className="border border-[var(--color-ink)]/10 bg-white/60 backdrop-blur-sm p-6 rounded-sm shadow-sm">
-              <div className="font-script text-5xl text-gold-foil leading-none" style={{ fontFamily: "Allura, cursive" }}>{s.n}</div>
-              <h3 className="font-display font-semibold text-2xl mt-2">{s.t}</h3>
-              <p className="text-[var(--color-ink-soft)] mt-2 leading-relaxed">{s.d}</p>
-            </div>
-          ))}
+      {/* ─── How it works ─── */}
+      <section
+        style={{
+          padding: "70px 80px",
+          background: brand.pinkSoft,
+          borderTop: "1px solid rgba(248,200,214,0.4)",
+          borderBottom: "1px solid rgba(248,200,214,0.4)",
+        }}
+      >
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <h2
+            style={{
+              fontFamily: font.display,
+              fontWeight: 700,
+              fontSize: "11px",
+              letterSpacing: "0.35em",
+              textTransform: "uppercase" as const,
+              textAlign: "center",
+              color: brand.ink,
+              marginBottom: "50px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+            }}
+          >
+            <SparkleIcon size={11} /> How It Works <SparkleIcon size={11} />
+          </h2>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "24px" }}>
+            {[
+              { icon: <Camera size={30} strokeWidth={1.2} />, num: "01", title: "Pose", body: "Step up to the camera and find your best angle — the booth is all yours." },
+              { icon: <span style={{ fontSize: "22px", fontFamily: font.display, fontWeight: 900 }}>×4</span>, num: "02", title: "Smile", body: "Four shots with a 3-second countdown each. Cheese, ma chérie!" },
+              { icon: <Printer size={30} strokeWidth={1.2} />, num: "03", title: "Print or Scan", body: "Grab your strip from the printer or scan the QR code to download." },
+            ].map((card, i) => (
+              <div
+                key={i}
+                style={{
+                  background: brand.white,
+                  border: "1px solid rgba(10,10,10,0.06)",
+                  borderRadius: "2px",
+                  padding: "44px 32px",
+                  textAlign: "center",
+                  boxShadow: "0 4px 24px rgba(10,10,10,0.04)",
+                }}
+              >
+                <div style={{ color: brand.gold, marginBottom: "14px" }}>{card.icon}</div>
+                <div style={{ fontFamily: font.script, fontSize: "22px", color: brand.pinkBaby, marginBottom: "6px", lineHeight: 1 }}>{card.num}</div>
+                <h3 style={{ fontFamily: font.display, fontWeight: 700, fontSize: "17px", margin: "0 0 12px", color: brand.ink }}>{card.title}</h3>
+                <p style={{ fontFamily: font.body, fontWeight: 300, fontSize: "12.5px", letterSpacing: "0.04em", color: "rgba(10,10,10,0.58)", margin: 0, lineHeight: 1.75 }}>{card.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <footer id="about" className="border-t border-[var(--color-ink)]/15 mt-12 py-8">
-        <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-sm text-[var(--color-ink-soft)]">
-          <p className="font-script text-xl text-[var(--color-pink-deep)]" style={{ fontFamily: "Allura, cursive" }}>
-            xoxo, the booth
-          </p>
-          <p className="tracking-[0.3em] uppercase text-xs">simone's sweet sixteen · paris · viii · viii</p>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", padding: "56px 0 40px", gap: "48px", flexWrap: "wrap" }}>
+        <BalloonBouquet />
+        <div style={{ textAlign: "center", paddingBottom: "12px" }}>
+          <div style={{ fontFamily: font.script, fontSize: "36px", color: brand.gold, lineHeight: 1.2 }}>voilà!</div>
+          <div style={{ fontFamily: font.body, fontWeight: 300, fontSize: "11px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(10,10,10,0.4)", marginTop: "6px" }}>
+            your memories await
+          </div>
         </div>
+        <BalloonBouquet />
+      </div>
+
+      <footer
+        style={{
+          borderTop: "1px solid rgba(10,10,10,0.07)",
+          padding: "28px 80px",
+          textAlign: "center",
+          background: brand.cream,
+        }}
+      >
+        <p style={{ fontFamily: font.body, fontWeight: 300, fontSize: "10px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(10,10,10,0.42)", margin: "0 0 8px" }}>
+          August 8 · A Night in Paris · save the night
+        </p>
+        <p style={{ fontFamily: font.script, fontSize: "22px", color: brand.gold, margin: 0 }}>Simone</p>
       </footer>
-    </main>
+    </div>
   );
 }
