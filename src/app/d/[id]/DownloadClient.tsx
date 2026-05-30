@@ -170,7 +170,7 @@ export default function DownloadClient({ imageUrl, stripId }: { imageUrl: string
             marginTop: "48px",
           }}
         >
-          Simone&rsquo;s Sweet 16 · A Night in Paris · August 8
+          Simone&rsquo;s Sweet 16 · A Night in Paris · August 8, 2026
         </p>
       </div>
     </div>

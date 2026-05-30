@@ -77,7 +77,7 @@ async function renderStrip(canvas: HTMLCanvasElement, photos: string[], template
 
   ctx.font = `300 18px 'Montserrat', sans-serif`;
   ctx.fillStyle = brand.ink;
-  ctx.fillText("SWEET 16 · AUGUST 8", STRIP_W / 2, BANNER_Y + 108);
+  ctx.fillText("SWEET 16 · AUGUST 8, 2026", STRIP_W / 2, BANNER_Y + 108);
 
   ctx.font = `300 14px 'Montserrat', sans-serif`;
   ctx.fillStyle = "rgba(10,10,10,0.4)";
@@ -478,7 +478,7 @@ export default function StripPage() {
               Simone
             </div>
             <div style={{ fontFamily: font.body, fontWeight: 300, fontSize: "10px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(10,10,10,0.4)", marginTop: "10px" }}>
-              Sweet 16 · August 8
+              Sweet 16 · August 8, 2026
             </div>
           </div>
         </div>

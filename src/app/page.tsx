@@ -127,7 +127,7 @@ export default function LandingPage() {
               margin: "0 0 42px",
             }}
           >
-            A Night in Paris · August 8
+            A Night in Paris · August 8, 2026
           </p>
 
           <Link
@@ -257,7 +257,7 @@ export default function LandingPage() {
         }}
       >
         <p style={{ fontFamily: font.body, fontWeight: 300, fontSize: "10px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(10,10,10,0.42)", margin: "0 0 8px" }}>
-          August 8 · A Night in Paris · save the night
+          August 8, 2026 · A Night in Paris · save the night
         </p>
         <p style={{ fontFamily: font.script, fontSize: "22px", color: brand.gold, margin: 0 }}>Simone</p>
       </footer>
