@@ -21,9 +21,10 @@ const font = {
 
 const STRIP_W = 600;
 const STRIP_H = 1800;
-const PHOTO_W = 560;
-const PHOTO_H = 420;
-const PAD = 20;
+// Panel grid matches the uploaded templates (Canva 1:3 4-panel layout)
+const PHOTO_W = 540;
+const PHOTO_H = 374;
+const PAD = 30;
 const GAP = 14;
 const photoYs = [PAD, PAD + PHOTO_H + GAP, PAD + (PHOTO_H + GAP) * 2, PAD + (PHOTO_H + GAP) * 3];
 const BANNER_Y = PAD + (PHOTO_H + GAP) * 4 - GAP;
