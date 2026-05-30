@@ -1,26 +1,112 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-pink: #f8c8d6;
+  --color-pink-deep: #e89eb4;
+  --color-gold: #d4af6b;
+  --color-gold-soft: #e6c89a;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #2a2a2a;
+  --color-paper: #ffffff;
+  --color-cream: #faf6f0;
+
+  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-script: "Allura", "Pinyon Script", "Great Vibes", cursive;
+  --font-sans: "Montserrat", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
   }
+  html, body { min-height: 100vh; margin: 0; }
+  body {
+    background:
+      radial-gradient(ellipse at top, rgba(248,200,214,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(212,175,107,0.10) 0%, transparent 60%),
+      var(--color-paper);
+  }
+
+  ::selection { background: var(--color-pink); color: var(--color-ink); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Gold foil text fill */
+.text-gold-foil {
+  background: linear-gradient(135deg, #b88a3a 0%, #e6c89a 35%, #d4af6b 60%, #b88a3a 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.05));
+}
+
+/* Pink ribbon flourish */
+.ribbon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'><path d='M2 8 Q 25 1, 50 7 T 100 7 T 150 7 T 198 7' fill='none' stroke='%23f8c8d6' stroke-width='3' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: 100% 0.5em;
+  padding-bottom: 0.25em;
+}
+
+/* Sparkle dots — purely decorative */
+.sparkle::before, .sparkle::after {
+  content: "✦";
+  color: var(--color-gold);
+  margin: 0 0.4em;
+  font-size: 0.7em;
+  vertical-align: 0.3em;
+}
+
+/* Camera flash */
+@keyframes flash { 0% { opacity: 0; } 10% { opacity: 1; } 100% { opacity: 0; } }
+.flash { animation: flash 0.6s ease-out; }
+
+/* Countdown pop */
+@keyframes count {
+  0%   { transform: scale(0.4); opacity: 0; }
+  20%  { transform: scale(1.1); opacity: 1; }
+  80%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+.count { animation: count 1s ease-out forwards; }
+
+/* Strip developing fade-in */
+@keyframes develop {
+  from { filter: brightness(0.5) contrast(0.7); opacity: 0; transform: translateY(20px); }
+  to   { filter: brightness(1) contrast(1); opacity: 1; transform: translateY(0); }
+}
+.develop { animation: develop 1.2s ease-out both; }
+
+/* Twinkling fairy lights */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.twinkle { animation: twinkle 2s ease-in-out infinite; }
+
+/* Gentle float (for Eiffel/balloons) */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-y { animation: float-y 4s ease-in-out infinite; }
+
+/* Print: only the strip sheet visible */
+@media print {
+  body { background: white !important; }
+  .no-print { display: none !important; }
+  .print-sheet {
+    page-break-after: avoid;
+    margin: 0;
+    width: 4in;
+    height: 6in;
+  }
+  @page { size: 4in 6in; margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
