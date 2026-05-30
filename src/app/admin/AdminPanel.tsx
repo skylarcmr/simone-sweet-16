@@ -2,7 +2,7 @@
 import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Trash2, Check, LogOut } from "lucide-react";
-import { uploadTemplate, setActiveTemplate, deleteTemplate, signOut } from "./actions";
+import { uploadTemplate, toggleTemplate, deleteTemplate, signOut } from "./actions";
 import { SparkleIcon, MiniEiffelSVG } from "@/components/illustrations";
 
 const brand = {
@@ -72,9 +72,9 @@ export default function AdminPanel({ email, templates }: { email: string; templa
     });
   };
 
-  const setActive = (id: string) => {
+  const toggle = (id: string, active: boolean) => {
     start(async () => {
-      await setActiveTemplate(id);
+      await toggleTemplate(id, active);
       router.refresh();
     });
   };
@@ -443,45 +443,27 @@ export default function AdminPanel({ email, templates }: { email: string; templa
                     Added {tpl.created_at?.slice(0, 10) ?? "—"}
                   </div>
                   <div style={{ display: "flex", gap: "10px" }}>
-                    {!tpl.active ? (
-                      <button
-                        onClick={() => setActive(tpl.id)}
-                        disabled={pending}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          background: "none",
-                          border: "none",
-                          cursor: pending ? "not-allowed" : "pointer",
-                          fontFamily: font.body,
-                          fontWeight: 400,
-                          fontSize: "10px",
-                          letterSpacing: "0.18em",
-                          textTransform: "uppercase" as const,
-                          color: brand.gold,
-                          padding: 0,
-                        }}
-                      >
-                        <Check size={12} strokeWidth={2} /> Set Active
-                      </button>
-                    ) : (
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          fontFamily: font.body,
-                          fontWeight: 400,
-                          fontSize: "10px",
-                          letterSpacing: "0.18em",
-                          textTransform: "uppercase" as const,
-                          color: brand.gold,
-                        }}
-                      >
-                        <Check size={12} strokeWidth={2} /> Active
-                      </span>
-                    )}
+                    <button
+                      onClick={() => toggle(tpl.id, !tpl.active)}
+                      disabled={pending}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        background: "none",
+                        border: "none",
+                        cursor: pending ? "not-allowed" : "pointer",
+                        fontFamily: font.body,
+                        fontWeight: 400,
+                        fontSize: "10px",
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase" as const,
+                        color: tpl.active ? brand.gold : "rgba(10,10,10,0.4)",
+                        padding: 0,
+                      }}
+                    >
+                      <Check size={12} strokeWidth={2} /> {tpl.active ? "On Picker" : "Hidden"}
+                    </button>
                     <span style={{ flex: 1 }} />
                     <button
                       onClick={() => removeTemplate(tpl.id, tpl.name)}

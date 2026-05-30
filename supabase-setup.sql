@@ -5,14 +5,12 @@ create table if not exists public.templates (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   storage_path text not null unique,
-  active boolean not null default false,
+  active boolean not null default true,
   created_at timestamptz not null default now()
 );
 
--- Only ONE template can be active at a time (enforced by unique partial index)
-create unique index if not exists templates_one_active
-  on public.templates (active)
-  where active = true;
+-- Drop the old "only one active" constraint if it exists -- guests now pick from all active templates
+drop index if exists public.templates_one_active;
 
 -- Strips: every uploaded strip the booth produces, addressable by short id
 create table if not exists public.strips (
@@ -25,15 +23,18 @@ create table if not exists public.strips (
 -- In Dashboard → Storage:
 --   1. Create bucket  "templates"  (PRIVATE — admin uploads, signed URLs only)
 --   2. Create bucket  "strips"     (PUBLIC  — guests need direct download access)
--- After creating buckets, RLS for the buckets themselves doesn't need editing
--- because the server uses the service role key to upload.
 
--- Row-level security on the tables (defense in depth — even if a leak happens
--- through the anon key, no one can mutate these directly).
+-- Row-level security on the tables.
 alter table public.templates enable row level security;
 alter table public.strips    enable row level security;
 
--- Allow public read of strips by id (so the /d/[id] page can resolve)
+-- Allow public read of templates (so /pick can list them) and strips (so /d/[id] resolves)
+drop policy if exists "public read templates" on public.templates;
+create policy "public read templates"
+  on public.templates for select
+  using (active = true);
+
+drop policy if exists "public read strips" on public.strips;
 create policy "public read strips"
   on public.strips for select
   using (true);

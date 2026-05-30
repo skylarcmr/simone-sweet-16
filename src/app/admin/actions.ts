@@ -23,10 +23,11 @@ export async function uploadTemplate(formData: FormData) {
     .upload(path, ab, { contentType: "image/png", upsert: false });
   if (upErr) return { error: upErr.message };
 
+  // Default to AVAILABLE on guest picker
   const { error: dbErr } = await service.from("templates").insert({
     name,
     storage_path: path,
-    active: false,
+    active: true,
   });
   if (dbErr) {
     await service.storage.from("templates").remove([path]);
@@ -35,12 +36,12 @@ export async function uploadTemplate(formData: FormData) {
   return { ok: true };
 }
 
-export async function setActiveTemplate(id: string) {
+// Toggle whether this template is shown to guests on the /pick page.
+// Multiple templates can be available simultaneously.
+export async function toggleTemplate(id: string, active: boolean) {
   await requireAdmin();
   const service = getServiceSupabase();
-  // Atomically: deactivate all, then activate the chosen one.
-  await service.from("templates").update({ active: false }).neq("id", id);
-  await service.from("templates").update({ active: true }).eq("id", id);
+  await service.from("templates").update({ active }).eq("id", id);
 }
 
 export async function deleteTemplate(id: string) {

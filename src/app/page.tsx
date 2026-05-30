@@ -131,7 +131,7 @@ export default function LandingPage() {
           </p>
 
           <Link
-            href="/booth"
+            href="/pick"
             style={{
               display: "inline-block",
               padding: "18px 52px",

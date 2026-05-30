@@ -95,9 +95,10 @@ async function renderStrip(canvas: HTMLCanvasElement, photos: string[], template
   }
 }
 
-async function fetchActiveTemplate(): Promise<string | null> {
+async function fetchTemplate(id: string | null): Promise<string | null> {
   try {
-    const res = await fetch("/api/active-template");
+    const url = id ? `/api/template?id=${encodeURIComponent(id)}` : "/api/template";
+    const res = await fetch(url);
     if (!res.ok) return null;
     const json = await res.json();
     return typeof json?.url === "string" ? json.url : null;
@@ -139,7 +140,11 @@ export default function StripPage() {
     if (!canvas) return;
 
     const timer = setTimeout(async () => {
-      const tpl = await fetchActiveTemplate();
+      let chosenId: string | null = null;
+      try {
+        chosenId = sessionStorage.getItem("s16_template_id");
+      } catch {}
+      const tpl = await fetchTemplate(chosenId);
       await renderStrip(canvas, photos, tpl);
       const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
       setDownloadUrl(dataUrl);
