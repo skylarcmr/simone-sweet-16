@@ -169,7 +169,7 @@ export default function LandingPage() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/eiffel-hero.jpg"
+            src="/eiffel-hero.png"
             alt="Eiffel Tower with pink bow"
             style={{
               maxWidth: "100%",
